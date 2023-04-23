@@ -51,6 +51,20 @@ void printHours() {
   }
 }
 
+void eraseGraph() {
+  display.stroke(0, 0, 0);
+  for (int a = 0; a < (DATAPOINTS-1); a++) {
+    display.line(XOFFSET+XDISTANCE*a, YOFFSET+YRANGE-(dataRecordHours[a]), XOFFSET+XDISTANCE*(a+1), YOFFSET+YRANGE-(dataRecordHours[a+1]));
+  }
+}
+
+void drawGraph() {
+  for (int a = 0; a < (DATAPOINTS-1); a++) {
+    display.stroke(100,20,35);
+    display.line(XOFFSET+XDISTANCE*a, YOFFSET+YRANGE-(dataRecordHours[a]), XOFFSET+XDISTANCE*(a+1), YOFFSET+YRANGE-(dataRecordHours[a+1]));
+  }
+}
+
 void setup() {
   pinMode(displayLedPin, OUTPUT);
   pinMode(btnPin, INPUT_PULLUP);
@@ -84,6 +98,8 @@ void setup() {
   display.text("S1", 55, 120);
 
   Serial.println( "--- Compiled: " __DATE__ ", " __TIME__ ", " __VERSION__ ", " UPSTREAMURL);
+
+  drawGraph();
 }
 
 void loop() {
@@ -104,20 +120,7 @@ void loop() {
   measured = int(analogRead(A0));
   measured = int(random(201,522));
 
-  // Write graph
-  for (int a = 0; a < (DATAPOINTS-1); a++) {
-    display.stroke(100,20,35);
-    display.line(XOFFSET+XDISTANCE*a, YOFFSET+YRANGE-(dataRecordHours[a]), XOFFSET+XDISTANCE*(a+1), YOFFSET+YRANGE-(dataRecordHours[a+1]));
-  }
-
   delay(DELAYMS);
-
-  // ... and erase graph
-  display.stroke(0, 0, 0);
-  for (int a = 0; a < (DATAPOINTS-1); a++) {
-    display.line(XOFFSET+XDISTANCE*a, YOFFSET+YRANGE-(dataRecordHours[a]), XOFFSET+XDISTANCE*(a+1), YOFFSET+YRANGE-(dataRecordHours[a+1]));
-  }
-
 
   // Data recording:
   //  - 6 values every 10min
@@ -141,6 +144,8 @@ void loop() {
 
   if (secondsPast == 3600)      // 1h
   {
+    eraseGraph();
+
     // Shift values first
     memcpy(dataRecordHours, &dataRecordHours[1], sizeof(dataRecordHours) - sizeof(int));
 
@@ -153,6 +158,8 @@ void loop() {
     Serial.print("Average (1h): ");
     Serial.println(dataRecordHours[DATAPOINTS - 1]);
     printHours();
+
+    drawGraph();
 
     secondsPast = 0;
   }
