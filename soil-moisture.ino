@@ -1,12 +1,5 @@
-#include <TFT.h>
-#include <SPI.h>
-#include <Arduino.h>
-
-#define UPSTREAMURL "<set-me>"
-
-#define cs   10
-#define dc   9
-#define rst  8
+// Author Jan Löser <jan.loeser@posteo.de>
+// Published under the GNU Public Licence 3
 
 /*
 Calibration:
@@ -16,6 +9,16 @@ Nothing (dry)   : 522
 Range           : 322 (322 / 3 = 107)
 */
 
+
+#include <TFT.h>
+#include <SPI.h>
+#include <Arduino.h>
+
+#define UPSTREAMURL "https://github.com/jloeser/arduino-soil-moisture"
+
+#define cs   10
+#define dc   9
+#define rst  8
 
 #define DATAPOINTS 15
 #define XOFFSET 11
